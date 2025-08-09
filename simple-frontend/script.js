@@ -7,7 +7,7 @@ const CONFIG = {
         : 'https://fragshub-backend.onrender.com',
     FRONTEND_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:8080' 
-        : window.location.origin,
+        : 'https://rad-speculoos-7ab2bb.netlify.app',
     DEFAULT_SPREADSHEET_ID: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms' // Example spreadsheet ID
 };
 

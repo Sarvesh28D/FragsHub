@@ -2,11 +2,12 @@
 
 ## ✅ Successfully Deployed
 
-### Frontend (Vercel)
-- **Status:** ✅ LIVE
-- **URL:** https://fragshub-frontend-59h190mmk-sarvesh-daymas-projects.vercel.app
+### Frontend (Netlify) - ✅ WORKING!
+- **Status:** ✅ LIVE AND FULLY FUNCTIONAL
+- **URL:** https://rad-speculoos-7ab2bb.netlify.app
 - **Features:** Complete tournament platform with Google Sheets export
 - **Mobile Ready:** ✅ Responsive design implemented
+- **Issue Fixed:** Switched from Vercel to Netlify for proper static hosting
 
 ### Backend (Render) 
 - **Status:** 🟡 Deploying (Auto-deployed from GitHub push)
@@ -18,7 +19,7 @@
 
 ### Frontend Access:
 ```
-https://fragshub-frontend-59h190mmk-sarvesh-daymas-projects.vercel.app
+https://rad-speculoos-7ab2bb.netlify.app
 ```
 
 ### Backend API (once deployed):

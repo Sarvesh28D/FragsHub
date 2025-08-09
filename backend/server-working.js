@@ -13,6 +13,7 @@ const corsOptions = {
   origin: [
     'https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app',
     'https://fragshub-frontend-59h190mmk-sarvesh-daymas-projects.vercel.app',
+    'https://rad-speculoos-7ab2bb.netlify.app',
     process.env.FRONTEND_URL || 'https://fragshub.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
