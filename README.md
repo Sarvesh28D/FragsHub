@@ -32,9 +32,17 @@ FragsHub is a modern, full-stack esports tournament management platform built wi
 
 ## 🌐 Live Platform
 
-- **Frontend**: [https://rad-speculoos-7ab2bb.netlify.app](https://rad-speculoos-7ab2bb.netlify.app)
-- **Backend API**: [https://fragshub-backend.onrender.com](https://fragshub-backend.onrender.com)
-- **Mobile Optimized**: Full responsive design for mobile testing
+- **Frontend**: [https://rad-speculoos-7ab2bb.netlify.app](https://rad-speculoos-7ab2bb.netlify.app) ✅ **LIVE**
+- **Backend API**: [https://fragshub-backend.onrender.com](https://fragshub-backend.onrender.com) ✅ **LIVE**
+- **Mobile Optimized**: Full responsive design for mobile testing ✅ **READY**
+
+### 🔧 API Endpoints (All Working)
+- `GET /api/test` - Health check ✅
+- `GET /api/teams` - Get all teams ✅
+- `GET /api/teams/export/csv` - CSV export ✅
+- `POST /api/teams/export/sheets` - Google Sheets export ✅
+- `GET /api/tournaments` - Tournament data ✅
+- `GET /api/admin/stats` - Statistics ✅
 
 ## 🛠️ Tech Stack
 
