@@ -2,8 +2,12 @@
 
 // Global configuration
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:5000',
-    FRONTEND_URL: 'http://localhost:8080',
+    API_BASE_URL: window.location.hostname === 'localhost' 
+        ? 'http://localhost:5000' 
+        : 'https://fragshub-backend.onrender.com',
+    FRONTEND_URL: window.location.hostname === 'localhost' 
+        ? 'http://localhost:8080' 
+        : window.location.origin,
     DEFAULT_SPREADSHEET_ID: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms' // Example spreadsheet ID
 };
 
