@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: [
     'https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app',
+    'https://fragshub-frontend-59h190mmk-sarvesh-daymas-projects.vercel.app',
     process.env.FRONTEND_URL || 'https://fragshub.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
