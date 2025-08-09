@@ -1,32 +1,109 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import { setGlobalOptions } from "firebase-functions";
+import { onRequest } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
+import * as admin from 'firebase-admin';
+import express from 'express';
+import cors from 'cors';
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+// Import route handlers
+import { paymentRoutes } from './routes/payment.js';
+import { tournamentRoutes } from './routes/tournament.js';
+import { teamRoutes } from './routes/team.js';
+import { adminRoutes } from './routes/admin.js';
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+// Initialize Firebase Admin
+admin.initializeApp();
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
+// Set global options for cost control
 setGlobalOptions({ maxInstances: 10 });
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const app = express();
+
+// CORS configuration - allow your Vercel frontend
+const corsOptions = {
+  origin: [
+    'https://fragshub.vercel.app',
+    'http://localhost:3000', // for local development
+    'http://localhost:3001'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Middleware
+app.use(cors(corsOptions));
+app.use(express.json());
+
+// Routes - keeping the /api prefix for compatibility
+app.use('/api/payments', paymentRoutes);
+app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/teams', teamRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Health check endpoint
+app.get('/health', (req: express.Request, res: express.Response) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    message: 'FragsHub Backend API is running!'
+  });
+});
+
+// Default route
+app.get('/', (req: express.Request, res: express.Response) => {
+  res.json({
+    message: 'FragsHub API Server',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: [
+      '/health',
+      '/api/payments',
+      '/api/tournaments', 
+      '/api/teams',
+      '/api/admin'
+    ]
+  });
+});
+
+// Export the API as a Firebase Function v2
+export const api = onRequest({
+  cors: true,
+  region: 'us-central1'
+}, app);
+
+// Firestore triggers
+export const onTeamCreate = onDocumentCreated({
+  document: 'teams/{teamId}',
+  region: 'us-central1'
+}, async (event) => {
+  const { onTeamCreateHandler } = await import('./triggers/firestore.js');
+  return onTeamCreateHandler(event.data, { params: event.params });
+});
+
+export const onPaymentComplete = onDocumentUpdated({
+  document: 'payments/{paymentId}',
+  region: 'us-central1'
+}, async (event) => {
+  const { onPaymentCompleteHandler } = await import('./triggers/firestore.js');
+  return onPaymentCompleteHandler(event, { params: event.params });
+});
+
+// Scheduled functions
+export const cleanupExpiredPayments = onSchedule({
+  schedule: 'every 24 hours',
+  region: 'us-central1'
+}, async (event) => {
+  const { cleanupExpiredPaymentsHandler } = await import('./triggers/scheduled.js');
+  return cleanupExpiredPaymentsHandler();
+});
+
+export const generateTournamentBrackets = onSchedule({
+  schedule: 'every 1 hours',
+  region: 'us-central1'
+}, async (event) => {
+  const { generateTournamentBracketsHandler } = await import('./triggers/scheduled.js');
+  return generateTournamentBracketsHandler();
+});

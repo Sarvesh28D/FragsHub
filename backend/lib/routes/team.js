@@ -103,6 +103,46 @@ router.post('/register', async (req, res) => {
         });
     }
 });
+// Get team statistics (MUST come before /:teamId)
+router.get('/stats/overview', async (req, res) => {
+    try {
+        const teamsSnapshot = await db.collection('teams').get();
+        const stats = {
+            total: 0,
+            pending: 0,
+            approved: 0,
+            rejected: 0,
+            paid: 0,
+            unpaid: 0,
+        };
+        teamsSnapshot.docs.forEach(doc => {
+            const team = doc.data();
+            stats.total++;
+            // Registration status
+            if (team.registrationStatus === 'pending')
+                stats.pending++;
+            else if (team.registrationStatus === 'approved')
+                stats.approved++;
+            else if (team.registrationStatus === 'rejected')
+                stats.rejected++;
+            // Payment status
+            if (team.paymentStatus === 'paid')
+                stats.paid++;
+            else
+                stats.unpaid++;
+        });
+        res.json({
+            success: true,
+            stats
+        });
+    }
+    catch (error) {
+        console.error('Error fetching team stats:', error);
+        res.status(500).json({
+            error: 'Failed to fetch team statistics'
+        });
+    }
+});
 // Get team by ID
 router.get('/:teamId', async (req, res) => {
     try {
@@ -212,46 +252,6 @@ router.delete('/:teamId', async (req, res) => {
         console.error('Error deleting team:', error);
         res.status(500).json({
             error: 'Failed to delete team'
-        });
-    }
-});
-// Get team statistics
-router.get('/stats/overview', async (req, res) => {
-    try {
-        const teamsSnapshot = await db.collection('teams').get();
-        const stats = {
-            total: 0,
-            pending: 0,
-            approved: 0,
-            rejected: 0,
-            paid: 0,
-            unpaid: 0,
-        };
-        teamsSnapshot.docs.forEach(doc => {
-            const team = doc.data();
-            stats.total++;
-            // Registration status
-            if (team.registrationStatus === 'pending')
-                stats.pending++;
-            else if (team.registrationStatus === 'approved')
-                stats.approved++;
-            else if (team.registrationStatus === 'rejected')
-                stats.rejected++;
-            // Payment status
-            if (team.paymentStatus === 'paid')
-                stats.paid++;
-            else
-                stats.unpaid++;
-        });
-        res.json({
-            success: true,
-            stats
-        });
-    }
-    catch (error) {
-        console.error('Error fetching team stats:', error);
-        res.status(500).json({
-            error: 'Failed to fetch team statistics'
         });
     }
 });

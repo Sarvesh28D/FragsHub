@@ -32,16 +32,14 @@ app.use(express.json());
 
 // Mount compiled API routes if available
 try {
-  // Note: Routes require proper environment setup (Razorpay keys, etc.)
-  // const { paymentRoutes } = require('./lib/routes/payment');
-  // const { tournamentRoutes } = require('./lib/routes/tournament');
-  // const { teamRoutes } = require('./lib/routes/team');
-  // const { adminRoutes } = require('./lib/routes/admin');
-  // app.use('/api/payments', paymentRoutes);
-  // app.use('/api/tournaments', tournamentRoutes);
-  // app.use('/api/teams', teamRoutes);
-  // app.use('/api/admin', adminRoutes);
-  console.log('API routes available but not mounted (requires env configuration)');
+  const { paymentRoutes } = require('./lib/routes/payment');
+  const { tournamentRoutes } = require('./lib/routes/tournament');
+  const { teamRoutes } = require('./lib/routes/team');
+  const { adminRoutes } = require('./lib/routes/admin');
+  app.use('/api/payments', paymentRoutes);
+  app.use('/api/tournaments', tournamentRoutes);
+  app.use('/api/teams', teamRoutes);
+  app.use('/api/admin', adminRoutes);
 } catch (err) {
   console.warn('Routes not mounted (build may be missing):', err && err.message ? err.message : err);
 }
@@ -64,10 +62,10 @@ app.get('/', (req, res) => {
     status: 'running',
     endpoints: [
       '/health',
-  '/api/payments (coming soon)',
-  '/api/tournaments (coming soon)', 
-  '/api/teams (coming soon)',
-  '/api/admin (coming soon)'
+  '/api/payments',
+  '/api/tournaments', 
+  '/api/teams',
+  '/api/admin'
     ],
     note: 'Firebase Functions routes will be added after configuration'
   });
