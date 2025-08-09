@@ -6,7 +6,7 @@ services:
     plan: free
     region: oregon
     rootDir: backend
-    buildCommand: npm install && npm run build
+    buildCommand: npm install
     startCommand: node server-working.js
     envVars:
       - key: PORT
@@ -15,9 +15,9 @@ services:
         value: production
       # Add your env vars below (set actual values in Render UI for secrets)
       - key: CORS_ORIGIN
-        value: https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app
+        value: https://rad-speculoos-7ab2bb.netlify.app
       - key: FRONTEND_URL
-        value: https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app
+        value: https://rad-speculoos-7ab2bb.netlify.app
       - key: FIREBASE_PROJECT_ID
         sync: false
       - key: FIREBASE_CLIENT_EMAIL
