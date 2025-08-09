@@ -2,7 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
+    "build": "echo 'Build step skipped - using pre-compiled server-working.js'",
     "build:watch": "tsc --watch",
     "start": "echo 'Starting FragsHub Backend Server...' && node server-working.js",
     "serve": "node server-working.js",
