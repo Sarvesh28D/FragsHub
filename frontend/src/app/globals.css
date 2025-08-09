@@ -2,28 +2,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Audiowide&family=Michroma:wght@400&display=swap');
 
 :root {
-  /* Gaming Color Palette */
+  /* HARDCORE Gaming Color Palette */
   --electric-blue: #00ffff;
   --neon-green: #39ff14;
   --laser-red: #ff073a;
   --plasma-purple: #bf00ff;
   --toxic-yellow: #ccff00;
   --cyber-orange: #ff6600;
+  --toxic-green: #00ff41;
+  --blood-red: #ff0040;
+  --cyber-pink: #ff00ff;
   
-  /* Dark Theme Base */
+  /* Ultra Dark Theme Base */
   --void-black: #000000;
   --shadow-black: #0a0a0a;
   --carbon-black: #101010;
   --steel-gray: #1a1a1a;
   --gunmetal: #2a2a2a;
+  --matrix-green: #001100;
   
-  /* Glow Effects */
-  --glow-electric: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
-  --glow-neon: 0 0 5px #39ff14, 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px #39ff14;
-  --glow-laser: 0 0 5px #ff073a, 0 0 10px #ff073a, 0 0 20px #ff073a, 0 0 40px #ff073a;
-  --glow-plasma: 0 0 5px #bf00ff, 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff;
+  /* INTENSE Glow Effects */
+  --glow-electric: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 80px #00ffff;
+  --glow-neon: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px #39ff14, 0 0 80px #39ff14;
+  --glow-laser: 0 0 10px #ff073a, 0 0 20px #ff073a, 0 0 40px #ff073a, 0 0 80px #ff073a;
+  --glow-plasma: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff, 0 0 80px #bf00ff;
+  --glow-toxic: 0 0 10px #ccff00, 0 0 20px #ccff00, 0 0 40px #ccff00, 0 0 80px #ccff00;
   
-  /* Gaming Fonts */
+  /* HARDCORE Gaming Fonts */
   --font-gaming: 'Black Ops One', monospace;
   --font-cyber: 'Orbitron', monospace;
   --font-tech: 'Audiowide', monospace;
@@ -55,7 +60,7 @@ body {
   font-weight: 400;
   letter-spacing: 0.5px;
   
-  /* Hardcore Gaming Background */
+  /* HARDCORE Gaming Background */
   background: 
     radial-gradient(circle at 10% 90%, rgba(0, 255, 255, 0.15) 0%, transparent 70%),
     radial-gradient(circle at 90% 10%, rgba(57, 255, 20, 0.12) 0%, transparent 65%),
@@ -64,9 +69,35 @@ body {
     radial-gradient(circle at 50% 50%, rgba(204, 255, 0, 0.05) 0%, transparent 80%),
     linear-gradient(135deg, var(--void-black) 0%, var(--shadow-black) 25%, var(--carbon-black) 50%, var(--shadow-black) 75%, var(--void-black) 100%);
   
-  /* Epic animated background */
-  background-size: 500% 500%, 400% 400%, 600% 600%, 350% 350%, 700% 700%, 100% 100%;
-  animation: gamingBgShift 30s ease infinite;
+  animation: backgroundPulse 8s ease-in-out infinite;
+}
+
+/* HARDCORE Background Animation */
+@keyframes backgroundPulse {
+  0%, 100% { 
+    background-size: 100% 100%, 110% 110%, 120% 120%, 130% 130%, 140% 140%, 100% 100%;
+  }
+  50% { 
+    background-size: 110% 110%, 120% 120%, 130% 130%, 140% 140%, 150% 150%, 100% 100%;
+  }
+}
+
+/* Add scanning line effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  z-index: 9999;
+  animation: scanLine 3s linear infinite;
+}
+
+@keyframes scanLine {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
 }
 
 @keyframes gamingBgShift {
@@ -84,62 +115,123 @@ body {
   }
 }
 
-/* Gaming Font Classes */
+/* HARDCORE Gaming Font Classes */
 .font-gaming {
-  font-family: var(--font-gaming);
-  font-weight: 400;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-family: var(--font-gaming) !important;
+  font-weight: 400 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
 }
 
 .font-cyber {
-  font-family: var(--font-cyber);
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-family: var(--font-cyber) !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
 }
 
 .font-tech {
-  font-family: var(--font-tech);
-  font-weight: 400;
-  letter-spacing: 1.5px;
+  font-family: var(--font-tech) !important;
+  font-weight: 400 !important;
+  letter-spacing: 1.5px !important;
 }
 
 .font-future {
-  font-family: var(--font-future);
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-family: var(--font-future) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
 }
 
 .font-matrix {
-  font-family: var(--font-matrix);
-  font-weight: 400;
-  letter-spacing: 2px;
+  font-family: var(--font-matrix) !important;
+  font-weight: 400 !important;
+  letter-spacing: 2px !important;
 }
 
-/* Enhanced Gaming Glow Effects */
+/* HARDCORE Gaming Glow Effects with Pulsing */
 .glow-electric {
   text-shadow: var(--glow-electric);
   color: var(--electric-blue);
+  animation: electricPulse 2s ease-in-out infinite;
 }
 
 .glow-neon {
   text-shadow: var(--glow-neon);
   color: var(--neon-green);
+  animation: neonPulse 2.5s ease-in-out infinite;
 }
 
 .glow-laser {
   text-shadow: var(--glow-laser);
   color: var(--laser-red);
+  animation: laserPulse 1.8s ease-in-out infinite;
 }
 
 .glow-plasma {
   text-shadow: var(--glow-plasma);
   color: var(--plasma-purple);
+  animation: plasmaPulse 2.2s ease-in-out infinite;
 }
 
 .glow-toxic {
-  text-shadow: 0 0 5px var(--toxic-yellow), 0 0 10px var(--toxic-yellow), 0 0 20px var(--toxic-yellow), 0 0 40px var(--toxic-yellow);
+  text-shadow: 0 0 10px var(--toxic-yellow), 0 0 20px var(--toxic-yellow), 0 0 40px var(--toxic-yellow), 0 0 80px var(--toxic-yellow);
   color: var(--toxic-yellow);
+  animation: toxicPulse 1.5s ease-in-out infinite;
+}
+
+/* HARDCORE Pulsing Animations */
+@keyframes electricPulse {
+  0%, 100% { 
+    text-shadow: var(--glow-electric);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 120px #00ffff;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% { 
+    text-shadow: var(--glow-neon);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 15px #39ff14, 0 0 30px #39ff14, 0 0 60px #39ff14, 0 0 120px #39ff14;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes laserPulse {
+  0%, 100% { 
+    text-shadow: var(--glow-laser);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 15px #ff073a, 0 0 30px #ff073a, 0 0 60px #ff073a, 0 0 120px #ff073a;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes plasmaPulse {
+  0%, 100% { 
+    text-shadow: var(--glow-plasma);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 15px #bf00ff, 0 0 30px #bf00ff, 0 0 60px #bf00ff, 0 0 120px #bf00ff;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes toxicPulse {
+  0%, 100% { 
+    text-shadow: 0 0 10px var(--toxic-yellow), 0 0 20px var(--toxic-yellow), 0 0 40px var(--toxic-yellow), 0 0 80px var(--toxic-yellow);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 20px var(--toxic-yellow), 0 0 40px var(--toxic-yellow), 0 0 80px var(--toxic-yellow), 0 0 160px var(--toxic-yellow);
+    transform: scale(1.025);
+  }
 }
 
 /* Gaming Glass Effects */
@@ -165,7 +257,7 @@ body {
     0 0 15px rgba(57, 255, 20, 0.15);
 }
 
-/* Gaming Button Effects */
+/* HARDCORE Gaming Button Effects */
 .btn-gaming {
   position: relative;
   padding: 18px 36px;
@@ -184,6 +276,7 @@ body {
   box-shadow: 
     0 0 20px rgba(0, 255, 255, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: buttonPulse 3s ease-in-out infinite;
 }
 
 .btn-gaming::before {
@@ -202,11 +295,36 @@ body {
 }
 
 .btn-gaming:hover {
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-3px) scale(1.05);
   box-shadow: 
-    0 15px 40px rgba(0, 255, 255, 0.6),
-    0 0 30px rgba(0, 255, 255, 0.8);
-  border-color: var(--neon-green);
+    0 15px 40px rgba(0, 255, 255, 0.8),
+    0 0 60px rgba(0, 255, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: buttonHoverPulse 0.8s ease-in-out infinite;
+}
+
+/* Button Pulsing Animation */
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(0, 255, 255, 0.6),
+      0 0 50px rgba(0, 255, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes buttonHoverPulse {
+  0%, 100% {
+    transform: translateY(-3px) scale(1.05);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.08);
+  }
 }
 
 /* Gaming Text Effects */
@@ -285,6 +403,97 @@ body {
     0 0 30px rgba(57, 255, 20, 0.3);
 }
 
+/* Animated constellation background */
+.constellation-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, var(--electric-blue), transparent),
+    radial-gradient(2px 2px at 40px 70px, var(--neon-green), transparent),
+    radial-gradient(1px 1px at 90px 40px, var(--laser-red), transparent),
+    radial-gradient(1px 1px at 130px 80px, var(--plasma-purple), transparent),
+    radial-gradient(2px 2px at 160px 30px, var(--toxic-yellow), transparent);
+  background-repeat: repeat;
+  background-size: 300px 200px;
+  animation: constellation-drift 25s linear infinite;
+}
+
+@keyframes constellation-drift {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  100% {
+    transform: translateX(-300px) translateY(-200px);
+  }
+}
+
+/* Floating light particles */
+.light-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.light-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--electric-blue);
+  border-radius: 50%;
+  animation: float-particle 10s ease-in-out infinite;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.light-particle:nth-child(2n) {
+  background: var(--neon-green);
+  animation-delay: -2s;
+}
+
+.light-particle:nth-child(3n) {
+  background: var(--laser-red);
+  animation-delay: -4s;
+}
+
+.light-particle:nth-child(4n) {
+  background: var(--plasma-purple);
+  animation-delay: -6s;
+}
+
+.light-particle:nth-child(5n) {
+  background: var(--toxic-yellow);
+  animation-delay: -8s;
+}
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-40px) translateX(15px) scale(1.3);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-80px) translateX(-10px) scale(0.9);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-120px) translateX(20px) scale(1.2);
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   html {
@@ -304,5 +513,13 @@ body {
 @media (max-width: 480px) {
   html {
     font-size: 12px;
+  }
+  
+  .constellation-bg {
+    opacity: 0.2;
+  }
+  
+  .light-particles {
+    opacity: 0.7;
   }
 }
