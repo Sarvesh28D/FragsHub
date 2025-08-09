@@ -6,8 +6,8 @@ services:
     plan: free
     region: oregon
     rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install && npm run build
+    startCommand: node server-working.js
     envVars:
       - key: PORT
         value: 10000
