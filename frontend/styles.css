@@ -302,7 +302,7 @@ body {
 }
 
 /* ============================================================================
-   CYBER BUTTONS
+   BUTTONS & INTERACTIVE ELEMENTS
    ============================================================================ */
 .cyber-button {
     position: relative;
@@ -320,6 +320,99 @@ body {
     transform-style: preserve-3d;
     clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 100%, 15px 100%);
     overflow: hidden;
+}
+
+.btn-gaming {
+    background: linear-gradient(45deg, rgb(var(--rgb-electric)), rgb(var(--rgb-neon-green)));
+    border: 2px solid rgb(var(--rgb-electric));
+    color: var(--void-black);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: var(--font-gaming);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--speed-fast);
+    box-shadow: 0 0 20px rgba(var(--rgb-electric), 0.5);
+}
+
+.btn-gaming:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(var(--rgb-electric), 0.8);
+}
+
+.btn-gaming-large {
+    background: linear-gradient(45deg, rgb(var(--rgb-electric)), rgb(var(--rgb-neon-green)));
+    border: 2px solid rgb(var(--rgb-electric));
+    color: var(--void-black);
+    padding: 18px 36px;
+    border-radius: 12px;
+    font-family: var(--font-gaming);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all var(--speed-fast);
+    box-shadow: 0 0 30px rgba(var(--rgb-electric), 0.6);
+}
+
+.btn-secondary-large {
+    background: rgba(var(--rgb-plasma-purple), 0.2);
+    border: 2px solid rgb(var(--rgb-plasma-purple));
+    color: rgb(var(--rgb-plasma-purple));
+    padding: 18px 36px;
+    border-radius: 12px;
+    font-family: var(--font-gaming);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all var(--speed-fast);
+    box-shadow: 0 0 30px rgba(var(--rgb-plasma-purple), 0.4);
+}
+
+.btn-secondary-large:hover {
+    background: rgba(var(--rgb-plasma-purple), 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(var(--rgb-plasma-purple), 0.8);
+}
+
+/* Text Effects */
+.glow-electric {
+    text-shadow: 
+        0 0 10px rgba(var(--rgb-electric), 0.8),
+        0 0 20px rgba(var(--rgb-electric), 0.6),
+        0 0 40px rgba(var(--rgb-electric), 0.4);
+}
+
+.glow-cyan {
+    text-shadow: 
+        0 0 10px rgba(var(--rgb-electric), 0.8),
+        0 0 20px rgba(var(--rgb-electric), 0.6);
+}
+
+.glow-purple {
+    text-shadow: 
+        0 0 10px rgba(var(--rgb-plasma-purple), 0.8),
+        0 0 20px rgba(var(--rgb-plasma-purple), 0.6);
+}
+
+.glow-green {
+    text-shadow: 
+        0 0 10px rgba(var(--rgb-neon-green), 0.8),
+        0 0 20px rgba(var(--rgb-neon-green), 0.6);
+}
+
+/* Animation Utilities */
+.animate-spin-slow {
+    animation: spin 8s linear infinite;
+}
+
+.animate-spin-reverse {
+    animation: spin-reverse 6s linear infinite;
+}
+
+@keyframes spin-reverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
 }
 
 .cyber-button.primary {

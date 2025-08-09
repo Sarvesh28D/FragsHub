@@ -235,22 +235,45 @@ export default function AdminDashboard() {
       </motion.nav>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
+        {/* Admin Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-12 relative"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
+          {/* Admin Badge */}
+          <div className="flex justify-center mb-4">
+            <div className="bg-gradient-to-r from-red-500 to-pink-600 px-6 py-2 rounded-full text-white font-cyber text-sm font-bold border border-red-400 shadow-lg shadow-red-500/30">
+              🛡️ ADMINISTRATOR ACCESS
+            </div>
+          </div>
+          
           <h1 className="text-5xl md:text-6xl font-black text-white mb-6">
-            Admin{' '}
+            <span className="text-red-400">ADMIN</span>{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-              Control Center
+              CONTROL CENTER
             </span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Manage tournaments, teams, and monitor platform performance
+            🚀 Master Control Panel for Tournament Operations & Team Management
           </p>
+          
+          {/* Admin Status Indicators */}
+          <div className="flex justify-center space-x-8 mt-8">
+            <div className="flex items-center space-x-2 text-green-400">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="font-cyber text-sm">SYSTEM ONLINE</span>
+            </div>
+            <div className="flex items-center space-x-2 text-cyan-400">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></div>
+              <span className="font-cyber text-sm">MONITORING ACTIVE</span>
+            </div>
+            <div className="flex items-center space-x-2 text-purple-400">
+              <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+              <span className="font-cyber text-sm">ALL SYSTEMS GO</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Stats Dashboard */}
