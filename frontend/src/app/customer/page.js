@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView, useScroll, useTransform } from 'framer-motion';
-import { Gamepad2, Zap, Trophy, Users, Target, Rocket, Crown, Calendar, ArrowRight, Play, Star, Shield, Sparkles, UserPlus, CreditCard } from 'lucide-react';
+import { Gamepad2, Zap, Trophy, Users, Target, Rocket, Crown, Calendar, ArrowRight, Play, Star, Shield, Sparkles, UserPlus, CreditCard, LogIn } from 'lucide-react';
 import WebGLGamingScene from '../../components/WebGLGamingScene';
-import { useAuth } from '../../hooks/useAuth';
+import AuthModal from '../../components/AuthModal';
+import { useAuth } from '../../hooks/useAuth.js';
 
 export default function CustomerHomepage() {
   const [mounted, setMounted] = useState(false);
-  const { user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, logout } = useAuth();
   
   useEffect(() => {
     setMounted(true);
@@ -31,22 +33,64 @@ export default function CustomerHomepage() {
         <WebGLGamingScene />
         
         {/* Navigation Overlay */}
-        <nav className="absolute top-0 left-0 right-0 z-50 p-6">
+        <nav className="absolute top-0 left-0 right-0 z-50 p-4 md:p-6">
           <div className="flex justify-between items-center">
-            <div className="font-gaming text-2xl text-cyan-400 glow-electric">
+            <div className="font-gaming text-xl md:text-2xl text-cyan-400 glow-electric">
               FRAGSHUB
             </div>
-            <div className="flex space-x-6 text-white font-cyber">
+            
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex space-x-6 text-white font-cyber">
               <a href="#tournaments" className="hover:text-cyan-400 transition-colors">TOURNAMENTS</a>
               <a href="/teams" className="hover:text-cyan-400 transition-colors">TEAMS</a>
-              <a href="#leaderboard" className="hover:text-cyan-400 transition-colors">LEADERBOARD</a>
+              <a href="/leaderboard" className="hover:text-cyan-400 transition-colors">LEADERBOARD</a>
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <span className="text-cyan-400">Welcome, {user.displayName || user.email}</span>
-                  <a href="/register-team" className="btn-gaming px-4 py-2">REGISTER TEAM</a>
+                  <span className="hidden xl:block text-cyan-400">Welcome, {user.displayName || user.email}</span>
+                  <a href="/register-team" className="btn-gaming px-4 py-2 text-sm">REGISTER TEAM</a>
+                  <button 
+                    onClick={logout}
+                    className="btn-gaming-secondary px-4 py-2 text-sm text-red-400 border-red-400 hover:bg-red-500/20"
+                  >
+                    LOGOUT
+                  </button>
                 </div>
               ) : (
-                <a href="/register-team" className="btn-gaming px-4 py-2">JOIN BATTLE</a>
+                <div className="flex items-center space-x-4">
+                  <button 
+                    onClick={() => setShowAuthModal(true)}
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    LOGIN
+                  </button>
+                  <a href="/register-team" className="btn-gaming px-4 py-2 text-sm">JOIN BATTLE</a>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="lg:hidden">
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <a href="/register-team" className="btn-gaming px-3 py-2 text-sm">REGISTER</a>
+                  <button 
+                    onClick={logout}
+                    className="btn-gaming-secondary px-3 py-2 text-sm text-red-400 border-red-400"
+                  >
+                    LOGOUT
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={() => setShowAuthModal(true)}
+                    className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm"
+                  >
+                    LOGIN
+                  </button>
+                  <a href="/register-team" className="btn-gaming px-3 py-2 text-sm">JOIN</a>
+                </div>
               )}
             </div>
           </div>
@@ -54,12 +98,12 @@ export default function CustomerHomepage() {
 
         {/* Hero Content Overlay */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center max-w-4xl mx-auto px-6">
+          <div className="text-center max-w-6xl mx-auto px-4 sm:px-6">
             <motion.h1 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="text-6xl md:text-8xl font-gaming text-white mb-6 glow-electric"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-gaming text-white mb-4 sm:mb-6 glow-electric leading-tight"
             >
               FRAG<span className="text-cyan-400">S</span>HUB
             </motion.h1>
@@ -68,7 +112,7 @@ export default function CustomerHomepage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
-              className="text-xl md:text-2xl text-gray-300 mb-8 font-cyber"
+              className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-6 sm:mb-8 font-cyber px-4"
             >
               THE ULTIMATE ESPORTS TOURNAMENT PLATFORM
             </motion.div>
@@ -80,44 +124,44 @@ export default function CustomerHomepage() {
               className="pointer-events-auto"
             >
               {user ? (
-                <div className="flex justify-center space-x-6">
+                <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4">
                   <motion.a
                     href="/register-team"
-                    className="btn-gaming-large px-8 py-4 text-lg flex items-center space-x-2"
+                    className="btn-gaming-large px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <UserPlus className="w-6 h-6" />
+                    <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                     <span>REGISTER TEAM</span>
                   </motion.a>
                   <motion.a
                     href="/teams"
-                    className="btn-secondary-large px-8 py-4 text-lg flex items-center space-x-2"
+                    className="btn-secondary-large px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Trophy className="w-6 h-6" />
+                    <Trophy className="w-5 h-5 sm:w-6 sm:h-6" />
                     <span>VIEW TEAMS</span>
                   </motion.a>
                 </div>
               ) : (
-                <div className="flex justify-center space-x-6">
+                <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4">
                   <motion.a
                     href="/register-team"
-                    className="btn-gaming-large px-8 py-4 text-lg flex items-center space-x-2"
+                    className="btn-gaming-large px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Rocket className="w-6 h-6" />
+                    <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
                     <span>JOIN TOURNAMENT</span>
                   </motion.a>
                   <motion.a
                     href="/teams"
-                    className="btn-secondary-large px-8 py-4 text-lg flex items-center space-x-2"
+                    className="btn-secondary-large px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Play className="w-6 h-6" />
+                    <Play className="w-5 h-5 sm:w-6 sm:h-6" />
                     <span>WATCH LIVE</span>
                   </motion.a>
                 </div>
@@ -127,24 +171,24 @@ export default function CustomerHomepage() {
         </div>
 
         {/* Stats Overlay */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 pointer-events-none">
+        <div className="absolute bottom-10 sm:bottom-20 left-1/2 transform -translate-x-1/2 pointer-events-none w-full px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1 }}
-            className="flex space-x-12 text-center"
+            className="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8 md:space-x-12 text-center"
           >
             <div className="font-cyber">
-              <div className="text-3xl font-bold text-cyan-400 glow-cyan">50+</div>
-              <div className="text-sm text-gray-400">TEAMS</div>
+              <div className="text-2xl sm:text-3xl font-bold text-cyan-400 glow-cyan">50+</div>
+              <div className="text-xs sm:text-sm text-gray-400">TEAMS</div>
             </div>
             <div className="font-cyber">
-              <div className="text-3xl font-bold text-purple-400 glow-purple">₹2L+</div>
-              <div className="text-sm text-gray-400">PRIZE POOL</div>
+              <div className="text-2xl sm:text-3xl font-bold text-purple-400 glow-purple">₹2L+</div>
+              <div className="text-xs sm:text-sm text-gray-400">PRIZE POOL</div>
             </div>
             <div className="font-cyber">
-              <div className="text-3xl font-bold text-green-400 glow-green">24/7</div>
-              <div className="text-sm text-gray-400">TOURNAMENTS</div>
+              <div className="text-2xl sm:text-3xl font-bold text-green-400 glow-green">24/7</div>
+              <div className="text-xs sm:text-sm text-gray-400">TOURNAMENTS</div>
             </div>
           </motion.div>
         </div>
@@ -279,6 +323,12 @@ export default function CustomerHomepage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </>
   );
 }

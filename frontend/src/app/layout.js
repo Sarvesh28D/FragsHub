@@ -1,7 +1,7 @@
 'use client';
 
-import { AuthProvider } from '../hooks/useAuth';
-import '../app/globals.css';
+import { AuthProvider } from '../hooks/useAuth.js';
+import './globals.css';
 
 export default function RootLayout({ children }) {
   return (

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FragsHub - Gaming Tournament Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>FragsHub</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#tournaments" class="nav-link">Tournaments</a></li>
+                <li><a href="#teams" class="nav-link">Teams</a></li>
+                <li><a href="#leaderboard" class="nav-link">Leaderboard</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-dropdown" style="display: none;" id="userDropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <i class="fas fa-user"></i>
+                        <span id="userNameDisplay">My Account</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#profile" class="nav-link">Profile</a></li>
+                        <li><a href="#my-teams" class="nav-link">My Teams</a></li>
+                        <li><a href="#payments" class="nav-link">Payments</a></li>
+                        <li class="team-captain-only" style="display: none;"><a href="#register-team" class="nav-link">Register Team</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <div class="role-switcher" style="display: none;">
+                    <button class="btn-role-switch" onclick="showRoleSwitcher()">
+                        <i class="fas fa-user-cog"></i>
+                        <span id="currentRoleDisplay">Player</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="role-dropdown" id="roleDropdown" style="display: none;">
+                        <div class="role-option" onclick="switchRole('admin')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Admin</span>
+                        </div>
+                        <div class="role-option" onclick="switchRole('team_captain')">
+                            <i class="fas fa-crown"></i>
+                            <span>Team Captain</span>
+                        </div>
+                        <div class="role-option" onclick="switchRole('player')">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Player</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-quick-login" onclick="quickLogin()" title="Quick Login (Demo)">
+                    <i class="fas fa-bolt"></i>
+                </button>
+                <button class="btn-login" onclick="showAuthModal('login')">Login</button>
+                <button class="btn-register" onclick="showAuthModal('register')">Register</button>
+                <button class="btn-admin" onclick="showAdminPanel()" style="display: none;">Admin</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area for Dynamic Pages -->
+    <main id="main-content" class="main-content" style="display: none;">
+        <!-- Dynamic content will be loaded here -->
+    </main>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Welcome to FragsHub</h1>
+            <p>The Ultimate Gaming Tournament Platform</p>
+            <p>Join competitive esports tournaments and showcase your gaming skills</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="router.navigate('tournaments')">Browse Tournaments</button>
+                <button class="btn-secondary" onclick="showAuthModal('register')">Join Now</button>
+            </div>
+        </div>
+        <div class="hero-animation">
+            <div class="floating-elements">
+                <div class="element element-1">🎮</div>
+                <div class="element element-2">🏆</div>
+                <div class="element element-3">⚡</div>
+                <div class="element element-4">🎯</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tournaments Section -->
+    <section id="tournaments" class="tournaments">
+        <div class="container">
+            <h2>Active Tournaments</h2>
+            <div class="tournament-grid" id="tournamentGrid">
+                <!-- Tournaments will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Teams Section -->
+    <section id="teams" class="teams">
+        <div class="container">
+            <h2>Featured Teams</h2>
+            <div class="team-grid" id="teamGrid">
+                <!-- Teams will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="leaderboard">
+        <div class="container">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard-table">
+                <table id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Team</th>
+                            <th>Points</th>
+                            <th>Wins</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <!-- Leaderboard data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About FragsHub</h2>
+            <p>FragsHub is the premier gaming tournament platform where gamers come together to compete, connect, and showcase their skills in various esports tournaments.</p>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Competitive Tournaments</h3>
+                    <p>Join exciting tournaments across multiple game titles</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <h3>Team Management</h3>
+                    <p>Create and manage your gaming teams efficiently</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Live Leaderboards</h3>
+                    <p>Track your progress and compete for the top spot</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>FragsHub</h3>
+                    <p>Your ultimate gaming destination</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#tournaments">Tournaments</a></li>
+                        <li><a href="#teams">Teams</a></li>
+                        <li><a href="#leaderboard">Leaderboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@fragshub.com</p>
+                    <p>Discord: FragsHub#1234</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FragsHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div id="loginForm" class="auth-form">
+                <h3>Login</h3>
+                <input type="email" placeholder="Email" id="loginEmail">
+                <input type="password" placeholder="Password" id="loginPassword">
+                <button onclick="handleLogin()">Login</button>
+                <p>Don't have an account? <a href="#" onclick="switchAuthMode('register')">Sign up</a></p>
+            </div>
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <h3>Register</h3>
+                <input type="text" placeholder="Team Name" id="registerTeam">
+                <input type="email" placeholder="Email" id="registerEmail">
+                <input type="password" placeholder="Password" id="registerPassword">
+                <button onclick="handleRegister()">Register</button>
+                <p>Already have an account? <a href="#" onclick="switchAuthMode('login')">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="modal">
+        <div class="modal-content admin-content">
+            <span class="close" onclick="closeAdminPanel()">&times;</span>
+            <h3>Admin Dashboard</h3>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('tournaments')">Tournaments</button>
+                <button class="tab-btn" onclick="showAdminTab('teams')">Teams</button>
+                <button class="tab-btn" onclick="showAdminTab('users')">Users</button>
+            </div>
+            <div id="adminContent">
+                <!-- Admin content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
