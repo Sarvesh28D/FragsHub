@@ -2,17 +2,22 @@
 services:
   - type: web
     name: fragshub-backend
-    runtime: docker
+    runtime: node
     plan: free
     region: oregon
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: PORT
-        value: 3001
+        value: 10000
       - key: NODE_ENV
         value: production
       # Add your env vars below (set actual values in Render UI for secrets)
+      - key: CORS_ORIGIN
+        value: https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app
       - key: FRONTEND_URL
-        sync: false
+        value: https://fragshub-frontend-rgv41gwie-sarvesh-daymas-projects.vercel.app
       - key: FIREBASE_PROJECT_ID
         sync: false
       - key: FIREBASE_CLIENT_EMAIL
@@ -25,6 +30,5 @@ services:
         sync: false
       - key: CHALLONGE_API_KEY
         sync: false
-    dockerCommand: "npm start"
     healthCheckPath: /health
     autoDeploy: true
