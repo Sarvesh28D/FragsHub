@@ -1,0 +1,214 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --background: #0F1923;
+  --foreground: #ECE8E1;
+  --primary: #FF4655;
+  --secondary: #0F1923;
+  --accent: #ECE8E1;
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-orbitron: 'Orbitron', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0F1923;
+    --foreground: #ECE8E1;
+  }
+}
+
+* {
+  border-color: #334155;
+}
+
+body {
+  color: var(--foreground);
+  background: linear-gradient(135deg, #111828 0%, #0F1923 50%, #1E293B 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1E293B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF4655;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E11D48;
+}
+
+/* Gaming-style animations */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px #FF4655, 0 0 10px #FF4655, 0 0 15px #FF4655;
+  }
+  50% {
+    box-shadow: 0 0 10px #FF4655, 0 0 20px #FF4655, 0 0 30px #FF4655;
+  }
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Button hover effects */
+.btn-primary {
+  background: #FF4655;
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  transform: scale(1);
+}
+
+.btn-primary:hover {
+  background: #E11D48;
+  transform: scale(1.05);
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-secondary {
+  background: #334155;
+  color: #ECE8E1;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #475569;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #475569;
+  border-color: #FF4655;
+}
+
+/* Input styles */
+.input-field {
+  background: #1E293B;
+  border: 1px solid #475569;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #ECE8E1;
+  transition: all 0.2s;
+}
+
+.input-field::placeholder {
+  color: #94A3B8;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #FF4655;
+  box-shadow: 0 0 0 3px rgba(255, 70, 85, 0.1);
+}
+
+/* Card styles */
+.card {
+  background: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  border-color: rgba(255, 70, 85, 0.5);
+}
+
+.card-hover {
+  transition: transform 0.2s;
+}
+
+.card-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Typography */
+.font-gaming {
+  font-family: var(--font-orbitron), monospace;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Status indicators */
+.status-online {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #10B981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-offline {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #EF4444;
+  border-radius: 50%;
+}
+
+.status-pending {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #F59E0B;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-gaming {
+  background: linear-gradient(135deg, #FF4655 0%, #E11D48 50%, #BE185D 100%);
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #111828 0%, #0F1923 50%, #1E293B 100%);
+}
+
+/* Match result animations */
+@keyframes victory {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.victory-animation {
+  animation: victory 0.5s ease-in-out;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

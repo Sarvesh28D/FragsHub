@@ -1,0 +1,30 @@
+# Render blueprint for FragsHub backend
+services:
+  - type: web
+    name: fragshub-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+      # Add your env vars below (set actual values in Render UI for secrets)
+      - key: FRONTEND_URL
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CHALLONGE_API_KEY
+        sync: false
+    dockerCommand: "npm start"
+    healthCheckPath: /health
+    autoDeploy: true
