@@ -3,316 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView, useScroll, useTransform } from 'framer-motion';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Sphere, Box, Torus, Icosahedron, Octahedron, MeshDistortMaterial, Float, Stars, Environment, Sparkles as DreiSparkles } from '@react-three/drei';
+import { OrbitControls, Sphere, MeshDistortMaterial, Float, Stars, Environment } from '@react-three/drei';
 import { Gamepad2, Zap, Trophy, Users, Target, Rocket, Crown, Calendar, ArrowRight, Play, Star, Shield, Sparkles } from 'lucide-react';
-import * as THREE from 'three';
-
-// Client-side Light Particles Component
-function LightParticles() {
-  const [particles, setParticles] = useState([]);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-    // Generate particle positions only on client side
-    const newParticles = [...Array(20)].map((_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 8,
-      animationDuration: 8 + Math.random() * 4
-    }));
-    setParticles(newParticles);
-  }, []);
-
-  if (!isClient) return null;
-
-  return (
-    <div className="light-particles">
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          className="light-particle"
-          style={{
-            left: `${particle.left}%`,
-            top: `${particle.top}%`,
-            animationDelay: `${particle.animationDelay}s`,
-            animationDuration: `${particle.animationDuration}s`
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// Floating Geometric Shape Component
-function FloatingShape({ geometry, position, color, scale = 1, speed = 1 }) {
-  const ref = useRef();
-  
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = state.clock.elapsedTime * speed * 0.5;
-      ref.current.rotation.y = state.clock.elapsedTime * speed * 0.3;
-      ref.current.rotation.z = state.clock.elapsedTime * speed * 0.2;
-      ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.5;
-    }
-  });
-
-  return (
-    <Float speed={speed} rotationIntensity={0.4} floatIntensity={0.4}>
-      <mesh ref={ref} position={position} scale={scale}>
-        {geometry}
-        <MeshDistortMaterial
-          color={color}
-          attach="material"
-          distort={0.3}
-          speed={speed * 2}
-          roughness={0}
-          metalness={0.8}
-          emissive={color}
-          emissiveIntensity={0.2}
-        />
-      </mesh>
-    </Float>
-  );
-}
-
-// Rotating Ring Component
-function RotatingRing({ position, color, radius = 2, speed = 1 }) {
-  const ref = useRef();
-  
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = state.clock.elapsedTime * speed * 0.5;
-      ref.current.rotation.z = state.clock.elapsedTime * speed * 0.8;
-    }
-  });
-
-  return (
-    <group ref={ref} position={position}>
-      <Torus args={[radius, 0.1, 16, 100]}>
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.3}
-          metalness={1}
-          roughness={0}
-        />
-      </Torus>
-    </group>
-  );
-}
-
-// DNA Helix Component
-function DNAHelix({ position }) {
-  const helixRef = useRef();
-  
-  useFrame((state) => {
-    if (helixRef.current) {
-      helixRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-    }
-  });
-
-  const spheres = [];
-  for (let i = 0; i < 20; i++) {
-    const angle = (i / 20) * Math.PI * 4;
-    const y = (i - 10) * 0.3;
-    const radius = 1.5;
-    
-    spheres.push(
-      <Float key={`helix-${i}`} speed={2} rotationIntensity={0.2} floatIntensity={0.1}>
-        <Sphere
-          args={[0.1, 16, 16]}
-          position={[
-            Math.cos(angle) * radius,
-            y,
-            Math.sin(angle) * radius
-          ]}
-        >
-          <meshStandardMaterial
-            color={i % 2 === 0 ? "#00d4ff" : "#ff0080"}
-            emissive={i % 2 === 0 ? "#00d4ff" : "#ff0080"}
-            emissiveIntensity={0.4}
-          />
-        </Sphere>
-      </Float>
-    );
-  }
-
-  return (
-    <group ref={helixRef} position={position}>
-      {spheres}
-    </group>
-  );
-}
-
-// Energy Orbs with Trails
-function EnergyOrbs() {
-  const orbsRef = useRef();
-  const [orbs, setOrbs] = useState([]);
-  
-  useEffect(() => {
-    const newOrbs = [];
-    for (let i = 0; i < 8; i++) {
-      const angle = (i / 8) * Math.PI * 2;
-      const radius = 15;
-      newOrbs.push({
-        position: [
-          Math.cos(angle) * radius,
-          Math.sin(angle * 0.5) * 8,
-          Math.sin(angle) * radius
-        ],
-        color: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff0080" : i % 4 === 2 ? "#8b5cf6" : "#00ff88",
-        speed: 0.5 + (i * 0.1) // Use index-based speed instead of random
-      });
-    }
-    setOrbs(newOrbs);
-  }, []);
-  
-  useFrame((state) => {
-    if (orbsRef.current) {
-      orbsRef.current.rotation.y = state.clock.elapsedTime * 0.1;
-    }
-  });
-
-  if (orbs.length === 0) return null;
-
-  return (
-    <group ref={orbsRef}>
-      {orbs.map((orb, index) => (
-        <Float key={index} speed={orb.speed * 2} rotationIntensity={0.2} floatIntensity={0.3}>
-          <Sphere args={[0.2, 32, 32]} position={orb.position}>
-            <meshStandardMaterial
-              color={orb.color}
-              emissive={orb.color}
-              emissiveIntensity={0.8}
-              metalness={1}
-              roughness={0}
-              transparent
-              opacity={0.9}
-            />
-          </Sphere>
-          
-          {/* Trailing effect */}
-          <Sphere 
-            args={[0.4, 16, 16]} 
-            position={[orb.position[0] * 0.9, orb.position[1] * 0.9, orb.position[2] * 0.9]}
-          >
-            <meshStandardMaterial
-              color={orb.color}
-              emissive={orb.color}
-              emissiveIntensity={0.3}
-              transparent
-              opacity={0.3}
-            />
-          </Sphere>
-        </Float>
-      ))}
-    </group>
-  );
-}
-
-// Enhanced Particle Field Component
-function EnhancedParticleField() {
-  const points = useRef();
-  const [isReady, setIsReady] = useState(false);
-  const particleCount = 3000;
-  
-  const [particleData, setParticleData] = useState({
-    positions: new Float32Array(particleCount * 3),
-    colors: new Float32Array(particleCount * 3),
-    velocities: new Float32Array(particleCount * 3)
-  });
-
-  useEffect(() => {
-    const { positions, colors, velocities } = particleData;
-    
-    for (let i = 0; i < particleCount; i++) {
-      // Position - use seeded values for consistency
-      const seed = i * 0.001;
-      positions[i * 3] = (Math.sin(seed) * Math.cos(seed * 2)) * 30;
-      positions[i * 3 + 1] = (Math.cos(seed) * Math.sin(seed * 3)) * 30;
-      positions[i * 3 + 2] = (Math.sin(seed * 2) * Math.cos(seed)) * 30;
-      
-      // Colors - cycle through our theme colors
-      const colorIndex = i % 4;
-      switch(colorIndex) {
-        case 0: // Cyan
-          colors[i * 3] = 0;
-          colors[i * 3 + 1] = 0.83;
-          colors[i * 3 + 2] = 1;
-          break;
-        case 1: // Purple
-          colors[i * 3] = 0.55;
-          colors[i * 3 + 1] = 0.37;
-          colors[i * 3 + 2] = 0.96;
-          break;
-        case 2: // Pink
-          colors[i * 3] = 1;
-          colors[i * 3 + 1] = 0;
-          colors[i * 3 + 2] = 0.5;
-          break;
-        case 3: // Green
-          colors[i * 3] = 0;
-          colors[i * 3 + 1] = 1;
-          colors[i * 3 + 2] = 0.53;
-          break;
-      }
-      
-      // Velocities - also seeded
-      velocities[i * 3] = Math.sin(seed * 4) * 0.01;
-      velocities[i * 3 + 1] = Math.cos(seed * 5) * 0.01;
-      velocities[i * 3 + 2] = Math.sin(seed * 6) * 0.01;
-    }
-    
-    setIsReady(true);
-  }, [particleCount]);
-
-  // Move useFrame BEFORE conditional return to maintain hook order
-  useFrame((state) => {
-    if (points.current && isReady) {
-      points.current.rotation.x = state.clock.elapsedTime * 0.05;
-      points.current.rotation.y = state.clock.elapsedTime * 0.02;
-      
-      // Update particle positions
-      const positions = points.current.geometry.attributes.position.array;
-      for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] += Math.sin(state.clock.elapsedTime + i) * 0.001;
-        positions[i * 3 + 1] += Math.cos(state.clock.elapsedTime + i) * 0.001;
-        positions[i * 3 + 2] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.001;
-      }
-      points.current.geometry.attributes.position.needsUpdate = true;
-    }
-  });
-
-  if (!isReady) return null;
-  
-  return (
-    <points ref={points}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particleCount}
-          array={particleData.positions}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          count={particleCount}
-          array={particleData.colors}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial 
-        size={0.03} 
-        vertexColors 
-        transparent
-        opacity={0.8}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  );
-}
 
 // Advanced 3D Scene with Multiple Elements
 function Scene3D() {
@@ -322,29 +14,20 @@ function Scene3D() {
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.05;
-      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
     }
   });
 
   return (
     <>
       <Environment preset="night" />
-      <Stars radius={400} depth={80} count={25000} factor={8} saturation={0} fade speed={1.5} />
-      
-      {/* Enhanced Lighting */}
-      <ambientLight intensity={0.1} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} color="#00d4ff" />
-      <pointLight position={[-10, -10, -10]} intensity={1} color="#ff0080" />
-      <pointLight position={[0, 15, 5]} intensity={0.8} color="#8b5cf6" />
-      <pointLight position={[15, 0, -5]} intensity={0.8} color="#00ff88" />
-      <spotLight position={[0, 20, 0]} intensity={1} angle={0.3} penumbra={1} color="#00d4ff" />
-      
-      {/* Sparkles Effect */}
-      <DreiSparkles count={100} scale={[20, 20, 20]} size={3} speed={0.4} />
+      <Stars radius={300} depth={60} count={20000} factor={7} saturation={0} fade speed={1} />
+      <ambientLight intensity={0.2} />
+      <pointLight position={[10, 10, 10]} intensity={1} color="#00d4ff" />
+      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#ff0080" />
       
       <group ref={groupRef}>
-        {/* Main Spheres */}
         <Float speed={2} rotationIntensity={1} floatIntensity={0.5}>
           <Sphere args={[1.5, 64, 64]} position={[0, 0, 0]}>
             <MeshDistortMaterial
@@ -354,14 +37,12 @@ function Scene3D() {
               speed={3}
               roughness={0}
               metalness={0.8}
-              emissive="#00d4ff"
-              emissiveIntensity={0.2}
             />
           </Sphere>
         </Float>
         
         <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.3}>
-          <Sphere args={[0.8, 32, 32]} position={[4, 1, -3]}>
+          <Sphere args={[0.8, 32, 32]} position={[3, 1, -2]}>
             <MeshDistortMaterial
               color="#ff0080"
               attach="material"
@@ -369,14 +50,12 @@ function Scene3D() {
               speed={2}
               roughness={0}
               metalness={0.9}
-              emissive="#ff0080"
-              emissiveIntensity={0.2}
             />
           </Sphere>
         </Float>
         
         <Float speed={1.8} rotationIntensity={0.3} floatIntensity={0.4}>
-          <Sphere args={[0.6, 32, 32]} position={[-3, -1, 2]}>
+          <Sphere args={[0.6, 32, 32]} position={[-2.5, -1, 1]}>
             <MeshDistortMaterial
               color="#8b5cf6"
               attach="material"
@@ -384,87 +63,57 @@ function Scene3D() {
               speed={4}
               roughness={0}
               metalness={1}
-              emissive="#8b5cf6"
-              emissiveIntensity={0.2}
             />
           </Sphere>
         </Float>
-
-        {/* Additional Geometric Shapes */}
-        <FloatingShape 
-          geometry={<boxGeometry args={[1, 1, 1]} />}
-          position={[6, 2, 1]}
-          color="#00ff88"
-          scale={0.8}
-          speed={1.5}
-        />
-        
-        <FloatingShape 
-          geometry={<icosahedronGeometry args={[0.8]} />}
-          position={[-4, 3, -1]}
-          color="#ff0080"
-          scale={1.2}
-          speed={2}
-        />
-        
-        <FloatingShape 
-          geometry={<octahedronGeometry args={[0.6]} />}
-          position={[2, -2, 3]}
-          color="#8b5cf6"
-          scale={1}
-          speed={1.8}
-        />
-        
-        <FloatingShape 
-          geometry={<boxGeometry args={[0.5, 2, 0.5]} />}
-          position={[-6, 0, -2]}
-          color="#00d4ff"
-          scale={1.1}
-          speed={1.3}
-        />
-
-        {/* Rotating Rings */}
-        <RotatingRing position={[8, 0, 0]} color="#00d4ff" radius={1.5} speed={1} />
-        <RotatingRing position={[-8, 0, 0]} color="#ff0080" radius={1.2} speed={-1.5} />
-        <RotatingRing position={[0, 6, -4]} color="#8b5cf6" radius={2} speed={0.8} />
-        <RotatingRing position={[0, -6, 4]} color="#00ff88" radius={1.8} speed={-1.2} />
-
-        {/* DNA Helix */}
-        <DNAHelix position={[-10, 0, 5]} />
-        <DNAHelix position={[10, 0, -5]} />
-
-        {/* More Floating Elements */}
-        <Float speed={3} rotationIntensity={0.6} floatIntensity={0.6}>
-          <Torus args={[1, 0.3, 16, 100]} position={[0, 4, 6]}>
-            <meshStandardMaterial
-              color="#00ff88"
-              emissive="#00ff88"
-              emissiveIntensity={0.3}
-              metalness={1}
-              roughness={0}
-            />
-          </Torus>
-        </Float>
-
-        <Float speed={2.5} rotationIntensity={0.8} floatIntensity={0.5}>
-          <Torus args={[0.8, 0.2, 16, 100]} position={[0, -4, -6]}>
-            <meshStandardMaterial
-              color="#ff0080"
-              emissive="#ff0080"
-              emissiveIntensity={0.3}
-              metalness={1}
-              roughness={0}
-            />
-          </Torus>
-        </Float>
       </group>
-
-      {/* Enhanced Particle Field */}
-      <EnhancedParticleField />
-      
-      {/* Energy Orbs */}
-      <EnergyOrbs />
     </>
+  );
+}
+
+// Particle Field Component
+function ParticleField() {
+  const points = useRef();
+  const particleCount = 2000;
+  
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 50;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+    
+    colors[i * 3] = Math.random();
+    colors[i * 3 + 1] = Math.random() * 0.5 + 0.5;
+    colors[i * 3 + 2] = 1;
+  }
+  
+  useFrame((state) => {
+    if (points.current) {
+      points.current.rotation.x = state.clock.elapsedTime * 0.05;
+      points.current.rotation.y = state.clock.elapsedTime * 0.02;
+    }
+  });
+  
+  return (
+    <points ref={points}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particleCount}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          count={particleCount}
+          array={colors}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial size={0.02} vertexColors />
+    </points>
   );
 }
 
@@ -553,72 +202,44 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
-      {/* Constellation Background */}
-      <div className="constellation-bg"></div>
-      
-      {/* Light Particles */}
-      <LightParticles />
-
-      {/* Dynamic Background with Enhanced Gradient Mesh */}
+      {/* Dynamic Background with Gradient Mesh */}
       <div className="fixed inset-0 z-0">
         <div 
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-30"
           style={{
             background: `
-              radial-gradient(circle at 15% 85%, rgba(0, 212, 255, 0.3) 0%, transparent 70%),
-              radial-gradient(circle at 85% 15%, rgba(255, 0, 128, 0.3) 0%, transparent 70%),
-              radial-gradient(circle at 45% 45%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
-              radial-gradient(circle at 70% 80%, rgba(0, 255, 136, 0.2) 0%, transparent 65%),
-              radial-gradient(circle at 30% 20%, rgba(255, 165, 0, 0.15) 0%, transparent 50%),
-              linear-gradient(45deg, rgba(0, 0, 0, 0.9) 0%, rgba(5, 5, 15, 0.95) 100%)
+              radial-gradient(circle at 20% 50%, #00d4ff 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, #ff0080 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, #8b5cf6 0%, transparent 50%),
+              radial-gradient(circle at 60% 30%, #00ff88 0%, transparent 50%),
+              linear-gradient(45deg, #000000 0%, #0a0a0a 100%)
             `
           }}
         />
         
-        {/* Animated Mesh Gradient with More Complexity */}
+        {/* Animated Mesh Gradient */}
         <motion.div
-          className="absolute inset-0 opacity-15"
+          className="absolute inset-0 opacity-20"
           animate={{
             background: [
-              "radial-gradient(600px circle at 20% 30%, rgba(0, 212, 255, 0.4), transparent 40%), radial-gradient(800px circle at 80% 70%, rgba(255, 0, 128, 0.3), transparent 40%)",
-              "radial-gradient(800px circle at 60% 80%, rgba(139, 92, 246, 0.4), transparent 40%), radial-gradient(600px circle at 40% 20%, rgba(0, 255, 136, 0.3), transparent 40%)",
-              "radial-gradient(700px circle at 80% 20%, rgba(255, 0, 128, 0.4), transparent 40%), radial-gradient(900px circle at 20% 80%, rgba(0, 212, 255, 0.3), transparent 40%)",
-              "radial-gradient(600px circle at 40% 60%, rgba(0, 255, 136, 0.4), transparent 40%), radial-gradient(800px circle at 70% 30%, rgba(139, 92, 246, 0.3), transparent 40%)"
+              "linear-gradient(45deg, #00d4ff, #ff0080, #8b5cf6, #00ff88)",
+              "linear-gradient(90deg, #ff0080, #8b5cf6, #00ff88, #00d4ff)",
+              "linear-gradient(135deg, #8b5cf6, #00ff88, #00d4ff, #ff0080)",
+              "linear-gradient(180deg, #00ff88, #00d4ff, #ff0080, #8b5cf6)"
             ]
           }}
           transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        
-        {/* Moving Light Rays */}
-        <motion.div
-          className="absolute inset-0 opacity-10"
-          style={{
-            background: `
-              linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.6) 50%, transparent 70%),
-              linear-gradient(-45deg, transparent 30%, rgba(255, 0, 128, 0.4) 50%, transparent 70%)
-            `,
-            backgroundSize: '200% 200%'
-          }}
-          animate={{
-            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
-          }}
-          transition={{
-            duration: 15,
+            duration: 8,
             repeat: Infinity,
             ease: "linear"
           }}
         />
         
-        {/* Enhanced Noise Texture Overlay */}
+        {/* Noise Texture Overlay */}
         <div 
-          className="absolute inset-0 opacity-8"
+          className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' fill='%23001122' opacity='0.6'/%3E%3C/svg%3E")`,
-            mixBlendMode: 'multiply'
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           }}
         />
       </div>
@@ -627,11 +248,12 @@ export default function HomePage() {
       <div className="fixed inset-0 z-10">
         <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
           <Scene3D />
+          <ParticleField />
           <OrbitControls 
             enableZoom={false} 
             enablePan={false} 
             autoRotate 
-            autoRotateSpeed={0.1}
+            autoRotateSpeed={0.2}
             enableDamping
             dampingFactor={0.05}
           />
@@ -812,62 +434,67 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
           >
-            {/* Main Title with Hardcore Gaming Typography */}
+            {/* Main Title with Advanced Typography */}
             <motion.div className="mb-8">
               <motion.h1 
-                className="text-6xl md:text-8xl lg:text-9xl font-gaming leading-none mb-4 glow-electric text-gaming-glow"
-                animate={{ 
-                  textShadow: [
-                    "0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff",
-                    "0 0 40px #39ff14, 0 0 80px #39ff14, 0 0 120px #39ff14",
-                    "0 0 50px #ff073a, 0 0 100px #ff073a, 0 0 150px #ff073a",
-                    "0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff"
-                  ]
+                className="text-6xl md:text-8xl lg:text-9xl font-black leading-none mb-4"
+                style={{
+                  background: `linear-gradient(135deg, 
+                    #00d4ff 0%, 
+                    #ff0080 25%, 
+                    #8b5cf6 50%, 
+                    #00ff88 75%, 
+                    #00d4ff 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  backgroundSize: '200% 200%',
+                  textShadow: '0 0 80px rgba(0, 212, 255, 0.5), 0 0 120px rgba(255, 0, 128, 0.3)'
                 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ 
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
               >
                 ENTER THE
               </motion.h1>
               
               <motion.h2 
-                className="text-5xl md:text-7xl lg:text-8xl font-gaming glow-laser"
+                className="text-5xl md:text-7xl lg:text-8xl font-black"
+                style={{
+                  background: `linear-gradient(135deg, 
+                    #ff0080 0%, 
+                    #8b5cf6 50%, 
+                    #00d4ff 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  textShadow: '0 0 60px rgba(255, 0, 128, 0.6)'
+                }}
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ 
-                  scale: 1, 
-                  opacity: 1,
-                  textShadow: [
-                    "0 0 20px #ff073a, 0 0 40px #ff073a, 0 0 60px #ff073a",
-                    "0 0 30px #bf00ff, 0 0 60px #bf00ff, 0 0 90px #bf00ff",
-                    "0 0 20px #ff073a, 0 0 40px #ff073a, 0 0 60px #ff073a"
-                  ]
-                }}
-                transition={{ 
-                  scale: { duration: 1, delay: 1, ease: "easeOut" },
-                  opacity: { duration: 1, delay: 1, ease: "easeOut" },
-                  textShadow: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }
-                }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1, delay: 1, ease: "easeOut" }}
               >
                 ARENA
               </motion.h2>
             </motion.div>
             
-            {/* Subtitle with Gaming Glow Effect */}
+            {/* Subtitle with Glow Effect */}
             <motion.p 
-              className="text-xl md:text-3xl lg:text-4xl font-future mb-12 max-w-4xl mx-auto leading-relaxed"
+              className="text-xl md:text-3xl lg:text-4xl text-white/90 mb-12 max-w-4xl mx-auto font-light leading-relaxed"
               style={{
-                color: '#ffffff',
-                textShadow: '0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(57, 255, 20, 0.2)'
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
               }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.5, ease: "easeOut" }}
             >
-              Where <span className="font-cyber glow-electric">legends</span> are forged, 
-              <span className="font-cyber glow-plasma"> champions</span> rise, and 
-              <span className="font-cyber glow-neon"> dreams</span> become reality
+              Where <span className="font-bold text-cyan-400">legends</span> are forged, 
+              <span className="font-bold text-purple-400"> champions</span> rise, and 
+              <span className="font-bold text-pink-400"> dreams</span> become reality
             </motion.p>
 
-            {/* Gaming CTA Buttons */}
+            {/* CTA Buttons with Premium Effects */}
             <motion.div 
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
               initial={{ opacity: 0, y: 30 }}
@@ -876,30 +503,59 @@ export default function HomePage() {
             >
               <motion.a 
                 href="/register-team"
-                className="btn-gaming relative overflow-hidden group"
+                className="group relative px-12 py-6 rounded-3xl text-white font-black text-xl overflow-hidden"
                 whileHover={{ 
-                  scale: 1.05,
-                  y: -2
+                  scale: 1.05, 
+                  boxShadow: "0 30px 60px rgba(0, 212, 255, 0.4)",
+                  textShadow: "0 0 30px rgba(255, 255, 255, 0.8)"
                 }}
                 whileTap={{ scale: 0.95 }}
+                style={{
+                  background: `linear-gradient(135deg, 
+                    rgba(0, 212, 255, 0.9) 0%, 
+                    rgba(255, 0, 128, 0.9) 50%, 
+                    rgba(139, 92, 246, 0.9) 100%)`,
+                  border: '2px solid transparent',
+                  backgroundClip: 'padding-box'
+                }}
               >
-                <span className="relative z-10 flex items-center gap-3 font-gaming">
+                <span className="relative z-10 flex items-center gap-3">
                   <Play className="w-6 h-6" />
                   DOMINATE NOW
                   <Zap className="w-6 h-6" />
                 </span>
+                <motion.div 
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(135deg, 
+                      rgba(255, 0, 128, 0.9) 0%, 
+                      rgba(139, 92, 246, 0.9) 50%, 
+                      rgba(0, 212, 255, 0.9) 100%)`
+                  }}
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: "0%" }}
+                  transition={{ duration: 0.4 }}
+                />
               </motion.a>
               
               <motion.a 
                 href="/teams"
-                className="glass-gaming px-8 py-4 font-cyber text-lg relative overflow-hidden group hover:glass-neon transition-all duration-300"
+                className="group relative px-12 py-6 rounded-3xl text-white font-black text-xl backdrop-blur-xl"
                 whileHover={{ 
                   scale: 1.05,
-                  y: -2
+                  boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)"
                 }}
                 whileTap={{ scale: 0.95 }}
+                style={{
+                  background: `rgba(0, 0, 0, 0.4)`,
+                  border: '2px solid',
+                  borderImage: `linear-gradient(135deg, 
+                    rgba(0, 212, 255, 0.8), 
+                    rgba(255, 0, 128, 0.8), 
+                    rgba(139, 92, 246, 0.8)) 1`
+                }}
               >
-                <span className="flex items-center gap-3 glow-neon">
+                <span className="flex items-center gap-3">
                   <Users className="w-6 h-6" />
                   VIEW WARRIORS
                 </span>
@@ -919,8 +575,15 @@ export default function HomePage() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.h2 
-            className="text-5xl md:text-6xl font-gaming text-center mb-20 glow-electric"
+            className="text-5xl md:text-6xl font-black text-center mb-20"
             variants={itemVariants}
+            style={{
+              background: `linear-gradient(135deg, #00d4ff, #ff0080, #8b5cf6)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              textShadow: '0 0 50px rgba(0, 212, 255, 0.5)'
+            }}
           >
             LIVE BATTLEFIELD
           </motion.h2>
@@ -1028,11 +691,18 @@ export default function HomePage() {
       <section className="relative z-20 py-32">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.h2 
-            className="text-5xl md:text-6xl font-gaming text-center mb-24 glow-laser"
+            className="text-5xl md:text-6xl font-black text-center mb-24"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            style={{
+              background: `linear-gradient(135deg, #ff0080, #8b5cf6, #00d4ff)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              textShadow: '0 0 50px rgba(255, 0, 128, 0.5)'
+            }}
           >
             DOMINATION FEATURES
           </motion.h2>
@@ -1139,35 +809,73 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <motion.h2 
-              className="text-6xl md:text-8xl font-gaming mb-8 glow-plasma"
+              className="text-6xl md:text-8xl font-black mb-8"
+              style={{
+                background: `linear-gradient(135deg, #00d4ff, #ff0080, #8b5cf6, #00ff88)`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                textShadow: '0 0 80px rgba(0, 212, 255, 0.6)'
+              }}
             >
               READY TO ASCEND?
             </motion.h2>
             <motion.p 
-              className="text-2xl md:text-3xl font-future mb-16 max-w-4xl mx-auto leading-relaxed"
+              className="text-2xl md:text-3xl text-white/90 mb-16 max-w-4xl mx-auto leading-relaxed"
               style={{
-                color: '#ffffff',
-                textShadow: '0 0 20px rgba(0, 255, 255, 0.3)'
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
               }}
             >
-              Join the <span className="font-cyber glow-electric">elite ranks</span> of legendary warriors competing in the most 
-              <span className="font-cyber glow-plasma"> prestigious</span> esports tournaments ever created
+              Join the <span className="font-black text-cyan-400">elite ranks</span> of legendary warriors competing in the most 
+              <span className="font-black text-purple-400"> prestigious</span> esports tournaments ever created
             </motion.p>
             
             <motion.a 
               href="/register-team"
-              className="btn-gaming inline-block text-2xl font-gaming px-16 py-6"
+              className="group relative inline-block px-20 py-8 rounded-full text-white font-black text-2xl overflow-hidden"
               whileHover={{ 
-                scale: 1.1,
-                y: -5
+                scale: 1.1, 
+                boxShadow: "0 40px 80px rgba(0, 212, 255, 0.5)",
+                textShadow: "0 0 40px rgba(255, 255, 255, 1)"
               }}
               whileTap={{ scale: 0.95 }}
+              style={{
+                background: `linear-gradient(135deg, 
+                  rgba(0, 212, 255, 0.9) 0%, 
+                  rgba(255, 0, 128, 0.9) 25%,
+                  rgba(139, 92, 246, 0.9) 50%,
+                  rgba(0, 255, 136, 0.9) 75%,
+                  rgba(0, 212, 255, 0.9) 100%)`,
+                backgroundSize: '300% 300%'
+              }}
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear"
+              }}
             >
               <span className="relative z-10 flex items-center gap-4">
                 <Rocket className="w-8 h-8" />
                 ENTER THE LEGEND
                 <Star className="w-8 h-8" />
               </span>
+              <motion.div 
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(135deg, 
+                    rgba(255, 0, 128, 0.9) 0%, 
+                    rgba(139, 92, 246, 0.9) 25%,
+                    rgba(0, 255, 136, 0.9) 50%,
+                    rgba(0, 212, 255, 0.9) 75%,
+                    rgba(255, 0, 128, 0.9) 100%)`
+                }}
+                initial={{ x: "100%" }}
+                whileHover={{ x: "0%" }}
+                transition={{ duration: 0.6 }}
+              />
             </motion.a>
           </motion.div>
         </div>
