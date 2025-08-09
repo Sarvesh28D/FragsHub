@@ -36,6 +36,7 @@ FragsHub is a modern, full-stack esports tournament management platform built wi
 - **Tailwind CSS v4** - Modern styling
 - **React 19** - Latest React features
 - **Lucide Icons** - Beautiful icons
+- HTML, CSS
 
 ### Backend
 - **Express.js** - Node.js web framework
