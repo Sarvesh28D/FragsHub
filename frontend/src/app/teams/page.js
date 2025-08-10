@@ -165,12 +165,17 @@ export default function TeamsPage() {
             ].map(filterOption => (
               <button
                 key={filterOption.key}
-                onClick={() => setFilter(filterOption.key)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Teams filter button clicked:', filterOption.key);
+                  setFilter(filterOption.key);
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                   filter === filterOption.key
                     ? 'bg-purple-600 text-white'
                     : 'bg-white/10 text-white/80 hover:bg-white/20'
                 }`}
+                type="button"
               >
                 {filterOption.label}
               </button>

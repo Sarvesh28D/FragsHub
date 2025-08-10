@@ -157,14 +157,24 @@ const TeamCard = ({ team, isAdmin, onApprove, onReject, className }: TeamCardPro
       {isAdmin && team.registrationStatus === 'pending' && (
         <div className="flex space-x-2 pt-4 border-t border-secondary-700">
           <button
-            onClick={() => onApprove?.(team.id)}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              console.log('Approve button clicked for team:', team.id);
+              onApprove?.(team.id);
+            }}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+            type="button"
           >
             Approve
           </button>
           <button
-            onClick={() => onReject?.(team.id)}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              console.log('Reject button clicked for team:', team.id);
+              onReject?.(team.id);
+            }}
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+            type="button"
           >
             Reject
           </button>

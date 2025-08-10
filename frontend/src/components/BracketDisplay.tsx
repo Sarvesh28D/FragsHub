@@ -92,7 +92,20 @@ const BracketDisplay = ({ tournament, loading, className }: BracketDisplayProps)
           : 'border-secondary-600 hover:border-primary-500/50',
         selectedMatch?.id === match.id && 'ring-2 ring-primary-500'
       )}
-      onClick={() => setSelectedMatch(match)}
+      onClick={(e) => {
+        e.preventDefault();
+        console.log('Match card clicked:', match.id);
+        setSelectedMatch(match);
+      }}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          console.log('Match card selected via keyboard:', match.id);
+          setSelectedMatch(match);
+        }
+      }}
     >
       <div className="space-y-2">
         <div className={cn(
@@ -182,8 +195,14 @@ const BracketDisplay = ({ tournament, loading, className }: BracketDisplayProps)
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-accent-100">Match Details</h3>
               <button
-                onClick={() => setSelectedMatch(null)}
-                className="text-accent-400 hover:text-accent-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Match details modal close button clicked');
+                  setSelectedMatch(null);
+                }}
+                className="text-accent-400 hover:text-accent-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md p-1"
+                type="button"
+                aria-label="Close match details"
               >
                 ×
               </button>

@@ -47,7 +47,7 @@ function FloatingCubes() {
 // Dashboard Stats Card Component
 const StatsCard = ({ title, value, change, icon: Icon, color, delay, onClick }) => (
   <motion.div
-    className="backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 p-6 relative overflow-hidden group cursor-pointer"
+    className="backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 p-6 relative overflow-hidden group cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
     initial={{ opacity: 0, y: 50 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6, delay }}
@@ -55,7 +55,20 @@ const StatsCard = ({ title, value, change, icon: Icon, color, delay, onClick }) 
       scale: 1.02, 
       boxShadow: "0 20px 40px rgba(139, 92, 246, 0.2)" 
     }}
-    onClick={onClick}
+    onClick={(e) => {
+      e.preventDefault();
+      console.log('Stats card clicked:', title);
+      onClick?.();
+    }}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        console.log('Stats card selected via keyboard:', title);
+        onClick?.();
+      }
+    }}
   >
     <motion.div 
       className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-cyan-500/10"
@@ -224,12 +237,17 @@ export default function AdminDashboard() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log('Admin tab clicked:', tab.id);
+                    setActiveTab(tab.id);
+                  }}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                     activeTab === tab.id
                       ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg'
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
+                  type="button"
                 >
                   <Icon className="w-5 h-5" />
                   {tab.name}

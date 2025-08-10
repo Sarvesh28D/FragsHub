@@ -39,9 +39,15 @@ const PaymentButton = ({
     });
   };
 
-  const handlePayment = async () => {
-    if (disabled || loading) return;
+  const handlePayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    
+    if (disabled || loading) {
+      console.log('Payment button clicked but disabled or loading');
+      return;
+    }
 
+    console.log('Payment button clicked for team:', teamId, 'amount:', amount);
     setLoading(true);
 
     try {
@@ -137,9 +143,10 @@ const PaymentButton = ({
       onClick={handlePayment}
       disabled={disabled || loading}
       className={cn(
-        'flex items-center justify-center space-x-2 bg-primary-500 hover:bg-primary-600 disabled:bg-secondary-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 disabled:transform-none',
+        'flex items-center justify-center space-x-2 bg-primary-500 hover:bg-primary-600 disabled:bg-secondary-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 disabled:transform-none focus:outline-none focus:ring-2 focus:ring-primary-500',
         className
       )}
+      type="button"
     >
       {loading ? (
         <>

@@ -42,14 +42,19 @@ export default function RoleSwitcher() {
       >
         {/* Role Indicator Button */}
         <motion.button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-xl border transition-all duration-300 ${
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('Role switcher button clicked, current open state:', isOpen);
+            setIsOpen(!isOpen);
+          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-xl border transition-all duration-300 focus:outline-none focus:ring-2 ${
             user.isAdmin 
-              ? 'bg-purple-500/20 border-purple-500/30 text-purple-300 hover:bg-purple-500/30' 
-              : 'bg-cyan-500/20 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30'
+              ? 'bg-purple-500/20 border-purple-500/30 text-purple-300 hover:bg-purple-500/30 focus:ring-purple-500' 
+              : 'bg-cyan-500/20 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 focus:ring-cyan-500'
           }`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          type="button"
         >
           {user.isAdmin ? (
             <Crown className="w-4 h-4" />

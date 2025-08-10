@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Save, DollarSign, Trophy, Calendar, Users, Settings, Download, Upload } from 'lucide-react';
-import { adminConfig, updateAdminConfig } from '../../lib/adminConfig';
+import { adminConfig, updateAdminConfig } from '../lib/adminConfig';
 
 export default function AdminContentManager({ onSave }) {
   const [activeTab, setActiveTab] = useState('tournament');

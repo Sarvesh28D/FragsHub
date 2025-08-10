@@ -56,8 +56,13 @@ const Navbar = () => {
                   <span className="text-accent-200 text-sm">{user.email}</span>
                 </div>
                 <button
-                  onClick={logout}
-                  className="flex items-center space-x-1 text-accent-200 hover:text-primary-500 transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log('Desktop logout button clicked');
+                    logout();
+                  }}
+                  className="flex items-center space-x-1 text-accent-200 hover:text-primary-500 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md px-2 py-1"
+                  type="button"
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="text-sm">Logout</span>
@@ -76,8 +81,14 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-accent-200 hover:text-accent-100 focus:outline-none"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Mobile menu toggle clicked, current state:', isOpen);
+                setIsOpen(!isOpen);
+              }}
+              className="text-accent-200 hover:text-accent-100 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md p-2"
+              type="button"
+              aria-label="Toggle mobile menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -93,8 +104,11 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-accent-200 hover:text-primary-500 block px-3 py-2 text-sm font-medium transition-colors"
-                onClick={() => setIsOpen(false)}
+                className="text-accent-200 hover:text-primary-500 block px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md"
+                onClick={(e) => {
+                  console.log('Mobile menu link clicked:', item.name);
+                  setIsOpen(false);
+                }}
               >
                 {item.name}
               </Link>
@@ -118,11 +132,14 @@ const Navbar = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log('Mobile logout button clicked');
                     logout();
                     setIsOpen(false);
                   }}
-                  className="text-accent-200 hover:text-primary-500 block px-3 py-2 text-sm font-medium transition-colors w-full text-left"
+                  className="text-accent-200 hover:text-primary-500 block px-3 py-2 text-sm font-medium transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md"
+                  type="button"
                 >
                   Logout
                 </button>

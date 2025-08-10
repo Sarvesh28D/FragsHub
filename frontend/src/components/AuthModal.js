@@ -71,7 +71,11 @@ export default function AuthModal({ isOpen, onClose }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('Auth modal backdrop clicked');
+          onClose();
+        }}
       />
       
       <motion.div
@@ -99,18 +103,26 @@ export default function AuthModal({ isOpen, onClose }) {
             <div className="space-y-2">
               <button
                 type="button"
-                onClick={() => handleQuickLogin('admin@fragshub.com', 'admin123')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Quick admin login button clicked');
+                  handleQuickLogin('admin@fragshub.com', 'admin123');
+                }}
                 disabled={loading}
-                className="w-full flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-purple-300 transition-all"
+                className="w-full flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-purple-300 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
               >
                 <Crown className="w-4 h-4" />
                 Admin Account
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickLogin('customer@fragshub.com', 'customer123')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Quick customer login button clicked');
+                  handleQuickLogin('customer@fragshub.com', 'customer123');
+                }}
                 disabled={loading}
-                className="w-full flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg text-cyan-300 transition-all"
+                className="w-full flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg text-cyan-300 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
               >
                 <User className="w-4 h-4" />
                 Customer Account
